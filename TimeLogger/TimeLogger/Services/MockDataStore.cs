@@ -49,6 +49,10 @@ namespace TimeLogger.Services
 
         public async Task<IEnumerable<Item>> GetItemsAsync(bool forceRefresh = false)
         {
+            if (forceRefresh)
+            {
+                return realm.All<Item>();
+            }
             return await Task.FromResult(items);
         }
     }

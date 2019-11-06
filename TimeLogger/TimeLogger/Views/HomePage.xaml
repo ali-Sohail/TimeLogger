@@ -21,16 +21,19 @@
 
     <ContentPage.Content>
         <StackLayout Padding="10">
+
+            <!--  Todays Log  -->
             <Frame Padding="10" CornerRadius="10">
                 <StackLayout>
                     <Label Text="{Binding Item.TitleText}" />
                     <Label Text="{Binding Item.Description}" />
-                    <TimePicker Time="{Binding Item.InTime, Converter={StaticResource TimeSpanToString}}" />
-                    <TimePicker Time="{Binding Item.OutTime, Converter={StaticResource TimeSpanToString}}" />
+                    <TimePicker Time="{Binding Item.InTime, Converter={StaticResource TimeSpanToString}, Mode=TwoWay}" />
+                    <TimePicker Time="{Binding Item.OutTime, Converter={StaticResource TimeSpanToString}, Mode=TwoWay}" />
                     <Button Command="{Binding SubmitCommand}" Text="Submit" />
                 </StackLayout>
             </Frame>
 
+            <!--  Logs List  -->
             <CollectionView ItemsSource="{Binding Items}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
@@ -38,6 +41,7 @@
                             <Frame CornerRadius="10">
                                 <StackLayout>
                                     <Label Text="{Binding Description}" />
+
                                     <StackLayout Orientation="Horizontal">
                                         <Label LineBreakMode="WordWrap">
                                             <Label.FormattedText>
@@ -56,6 +60,8 @@
                                             </Label.FormattedText>
                                         </Label>
                                     </StackLayout>
+
+                                    <Label Text="{Binding Duration}" />
                                 </StackLayout>
                             </Frame>
                         </ContentView>

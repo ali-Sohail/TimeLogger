@@ -16,7 +16,7 @@ namespace TimeLogger.ViewModels
         public IEnumerable<Item> Items
         {
             get => _items;
-            set => SetProperty(ref _items, value);
+            set { SetProperty(ref _items, value); OnPropertyChanged(); }
         }
 
         private Item _item;
@@ -48,7 +48,7 @@ namespace TimeLogger.ViewModels
                     TitleText = DateTime.Now.ToShortDateString(),
                     Description = DateTime.Now.ToLongDateString(),
                     InTime = DateTime.Now.TimeOfDay.ToString(),
-                    OutTime = DateTime.Now.TimeOfDay.ToString()
+                    OutTime = DateTime.Now.TimeOfDay.ToString(),
                 };
             }
         }
@@ -56,6 +56,7 @@ namespace TimeLogger.ViewModels
         private async void Save()
         {
             await DataStore.AddItemAsync(Item);
+            Items = await DataStore.GetItemsAsync(true);
         }
     }
 }
