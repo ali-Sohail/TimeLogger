@@ -9,27 +9,19 @@ namespace TimeLogger.Services
 {
     public sealed class MockDataStore : IDataStore<Item>
     {
-        private readonly List<Item> items;
+        private readonly IEnumerable<Item> items;
 
         private readonly Realm realm;
 
         public MockDataStore()
         {
             realm = Realm.GetInstance();
-            items = new List<Item>()
-            {
-                new Item { Id = Guid.NewGuid().ToString(), TitleText = "First item", Description="This is an item description." },
-                new Item { Id = Guid.NewGuid().ToString(), TitleText = "Second item", Description="This is an item description." },
-                new Item { Id = Guid.NewGuid().ToString(), TitleText = "Third item", Description="This is an item description." },
-                new Item { Id = Guid.NewGuid().ToString(), TitleText = "Fourth item", Description="This is an item description." },
-                new Item { Id = Guid.NewGuid().ToString(), TitleText = "Fifth item", Description="This is an item description." },
-                new Item { Id = Guid.NewGuid().ToString(), TitleText = "Sixth item", Description="This is an item description." }
-            };
+            items = realm.All<Item>();
         }
 
         public async Task<bool> AddItemAsync(Item item)
         {
-            realm.Write(() => realm.Add(item));
+            realm.Write(() => realm.Add(item, true));
             return await Task.FromResult(true);
         }
 

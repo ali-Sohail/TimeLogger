@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using TimeLogger.Models;
 using Xamarin.Forms;
@@ -30,19 +32,30 @@ namespace TimeLogger.ViewModels
         public HomePageViewModel()
         {
             Title = "Home Page";
-            SubmitCommand = new Command(InitData);
+            InitData();
+            SubmitCommand = new Command(Save);
         }
 
-        private void InitData()
+        private async void InitData()
         {
-            Item = new Item
+            Items = await DataStore.GetItemsAsync();
+            Item = Items?.Where<Item>(x => x.TitleText == DateTime.Now.ToShortDateString()).FirstOrDefault();
+            if (Item == null)
             {
-                Id = Guid.NewGuid().ToString(),
-                TitleText = DateTime.Now.ToShortDateString(),
-                Description = DateTime.Now.ToLongDateString(),
-                InTime = DateTime.Now.TimeOfDay.ToString(),
-                OutTime = DateTime.Now.TimeOfDay.ToString()
-            };
+                Item = new Item
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    TitleText = DateTime.Now.ToShortDateString(),
+                    Description = DateTime.Now.ToLongDateString(),
+                    InTime = DateTime.Now.TimeOfDay.ToString(),
+                    OutTime = DateTime.Now.TimeOfDay.ToString()
+                };
+            }
+        }
+
+        private async void Save()
+        {
+            await DataStore.AddItemAsync(Item);
         }
     }
 }

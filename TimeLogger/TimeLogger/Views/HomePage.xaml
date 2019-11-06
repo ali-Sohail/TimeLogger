@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:TimeLogger.ViewModels"
     Title="{Binding Title}"
+    Shell.NavBarIsVisible="False"
     mc:Ignorable="d">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -19,16 +20,48 @@
     </ContentPage.BindingContext>
 
     <ContentPage.Content>
-        <ContentView Padding="10">
+        <StackLayout Padding="10">
             <Frame Padding="10" CornerRadius="10">
                 <StackLayout>
                     <Label Text="{Binding Item.TitleText}" />
                     <Label Text="{Binding Item.Description}" />
                     <TimePicker Time="{Binding Item.InTime, Converter={StaticResource TimeSpanToString}}" />
                     <TimePicker Time="{Binding Item.OutTime, Converter={StaticResource TimeSpanToString}}" />
-                    <Button Command="{Binding SubmitCommand}" Text="Click" />
+                    <Button Command="{Binding SubmitCommand}" Text="Submit" />
                 </StackLayout>
             </Frame>
-        </ContentView>
+
+            <CollectionView ItemsSource="{Binding Items}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <ContentView Padding="10">
+                            <Frame CornerRadius="10">
+                                <StackLayout>
+                                    <Label Text="{Binding Description}" />
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label LineBreakMode="WordWrap">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span FontAttributes="Bold" Text="In Time :" />
+                                                    <Span Text="{Binding InTime}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                        <Label LineBreakMode="WordWrap">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span FontAttributes="Bold" Text="Out Time :" />
+                                                    <Span Text="{Binding OutTime}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </StackLayout>
+                                </StackLayout>
+                            </Frame>
+                        </ContentView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>
