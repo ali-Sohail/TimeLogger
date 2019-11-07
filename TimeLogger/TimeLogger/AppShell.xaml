@@ -35,6 +35,9 @@
         <Tab Title="Home Page" Icon="tab_feed.png">
             <ShellContent ContentTemplate="{DataTemplate local:HomePage}" />
         </Tab>
+        <Tab Title="Add Log" Icon="tab_feed.png">
+            <ShellContent ContentTemplate="{DataTemplate local:AddPage}" />
+        </Tab>
     </FlyoutItem>
 
     <!-- Optional Templates

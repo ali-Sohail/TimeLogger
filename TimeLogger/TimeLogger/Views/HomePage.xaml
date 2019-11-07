@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:TimeLogger.ViewModels"
     Title="{Binding Title}"
-    Shell.NavBarIsVisible="False"
+    Shell.NavBarIsVisible="True"
     mc:Ignorable="d">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -27,14 +27,39 @@
                 <StackLayout>
                     <Label Text="{Binding Item.TitleText}" />
                     <Label Text="{Binding Item.Description}" />
-                    <TimePicker Time="{Binding Item.InTime, Converter={StaticResource TimeSpanToString}, Mode=TwoWay}" />
-                    <TimePicker Time="{Binding Item.OutTime, Converter={StaticResource TimeSpanToString}, Mode=TwoWay}" />
+                    <FlexLayout
+                        AlignContent="SpaceEvenly"
+                        AlignItems="Center"
+                        JustifyContent="SpaceBetween">
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="Medium"
+                            Text="InTime" />
+                        <TimePicker HorizontalOptions="FillAndExpand" Time="{Binding Item.InTime, Converter={StaticResource TimeSpanToString}, Mode=TwoWay}" />
+                        <Button Command="{Binding InTimeNowCommand}" Text="Now" />
+                    </FlexLayout>
+
+                    <FlexLayout
+                        AlignContent="SpaceEvenly"
+                        AlignItems="Center"
+                        JustifyContent="SpaceBetween">
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="Medium"
+                            Text="OutTime" />
+                        <TimePicker HorizontalOptions="FillAndExpand" Time="{Binding Item.OutTime, Converter={StaticResource TimeSpanToString}, Mode=TwoWay}" />
+                        <Button Command="{Binding OutTimeNowCommand}" Text="Now" />
+                    </FlexLayout>
+
                     <Button Command="{Binding SubmitCommand}" Text="Submit" />
                 </StackLayout>
             </Frame>
 
             <!--  Logs List  -->
-            <CollectionView ItemsSource="{Binding Items}">
+            <CollectionView
+                ItemsSource="{Binding Items}"
+                SelectedItem="{Binding Item, Mode=TwoWay}"
+                SelectionMode="Single">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <ContentView Padding="10">
@@ -61,7 +86,14 @@
                                         </Label>
                                     </StackLayout>
 
-                                    <Label Text="{Binding Duration}" />
+                                    <Label LineBreakMode="WordWrap">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span FontAttributes="Bold" Text="Time Spend: " />
+                                                <Span Text="{Binding Duration}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
                                 </StackLayout>
                             </Frame>
                         </ContentView>

@@ -11,6 +11,8 @@ namespace TimeLogger.ViewModels
 {
     public class HomePageViewModel : BaseViewModel
     {
+        #region Properties & Fields & Commands
+
         private IEnumerable<Item> _items;
 
         public IEnumerable<Item> Items
@@ -28,13 +30,22 @@ namespace TimeLogger.ViewModels
         }
 
         public ICommand SubmitCommand { get; set; }
+        public ICommand InTimeNowCommand { get; set; }
+        public ICommand OutTimeNowCommand { get; set; }
+
+        #endregion Properties & Fields & Commands
 
         public HomePageViewModel()
+
         {
             Title = "Home Page";
             InitData();
             SubmitCommand = new Command(Save);
+            InTimeNowCommand = new Command(() => { Item.InTime = DateTime.Now.TimeOfDay.ToString(); Save(); });
+            OutTimeNowCommand = new Command(() => { Item.OutTime = DateTime.Now.TimeOfDay.ToString(); Save(); });
         }
+
+        #region Methods
 
         private async void InitData()
         {
@@ -44,11 +55,11 @@ namespace TimeLogger.ViewModels
             {
                 Item = new Item
                 {
-                    Id = Guid.NewGuid().ToString(),
                     TitleText = DateTime.Now.ToShortDateString(),
                     Description = DateTime.Now.ToLongDateString(),
                     InTime = DateTime.Now.TimeOfDay.ToString(),
                     OutTime = DateTime.Now.TimeOfDay.ToString(),
+                    Id = Guid.NewGuid().ToString()
                 };
             }
         }
@@ -58,5 +69,7 @@ namespace TimeLogger.ViewModels
             await DataStore.AddItemAsync(Item);
             Items = await DataStore.GetItemsAsync(true);
         }
+
+        #endregion Methods
     }
 }

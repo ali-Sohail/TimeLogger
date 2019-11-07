@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TimeLogger.Views.AddPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:coverter="clr-namespace:TimeLogger.Converter"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:TimeLogger.ViewModels"
+    Title="{Binding Title}"
+    mc:Ignorable="d">
+
+    <ContentPage.BindingContext>
+        <vm:AddPageViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <coverter:StringToTimeSpanConverter x:Key="TimeSpanToString" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <Frame Margin="10" CornerRadius="10">
+            <StackLayout>
+                <Label Text="Select Date" />
+                <DatePicker Date="{Binding DateTimeValue}" />
+                <TimePicker Time="{Binding Item.InTime, Converter={StaticResource TimeSpanToString}, Mode=TwoWay}" />
+                <TimePicker Time="{Binding Item.OutTime, Converter={StaticResource TimeSpanToString}, Mode=TwoWay}" />
+                <Button Command="{Binding SubmitCommand}" Text="Submit" />
+            </StackLayout>
+        </Frame>
+    </ContentPage.Content>
+</ContentPage>
