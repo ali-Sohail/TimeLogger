@@ -12,19 +12,18 @@ namespace TimeLogger.Services
     {
         private IEnumerable<Item> items;
 
-        private readonly Realm realm;
+        private Realm realm;
 
         public MockDataStore()
         {
-            realm = Realm.GetInstance();
-            items = realm.All<Item>().OrderBy(x => x.TitleText);
+            //CreateInstance().ConfigureAwait(true);
         }
 
         public async Task<bool> AddItemAsync(Item item)
         {
             try
             {
-                realm.Write(() => realm.Add(item, true));
+                realm.Add(item, true);
                 return await Task.FromResult(true);
             }
             catch (Exception ex)
@@ -38,12 +37,9 @@ namespace TimeLogger.Services
         {
             try
             {
-                realm.Write(() =>
-                {
-                    var oldItem = realm.All<Item>().Where((Item arg) => arg.TitleText == item.TitleText).FirstOrDefault();
-                    oldItem = item;
-                    realm.Add(oldItem, true);
-                });
+                var oldItem = realm.All<Item>().Where((Item arg) => arg.TitleText == item.TitleText).FirstOrDefault();
+                oldItem = item;
+                realm.Add(oldItem, true);
                 return await Task.FromResult(true);
             }
             catch (Exception ex)
@@ -55,11 +51,9 @@ namespace TimeLogger.Services
 
         public async Task<bool> DeleteItemAsync(string TitleText)
         {
-            realm.Write(() =>
-            {
-                var oldItem = realm.All<Item>().Where((Item arg) => arg.TitleText == TitleText).FirstOrDefault();
-                realm.Remove(oldItem);
-            });
+
+            var oldItem = realm.All<Item>().Where((Item arg) => arg.TitleText == TitleText).FirstOrDefault();
+            realm.Remove(oldItem);
             return await Task.FromResult(true);
         }
 
@@ -76,6 +70,49 @@ namespace TimeLogger.Services
                 return items;
             }
             return await Task.FromResult(items);
+        }
+
+        public async Task<bool> CreateInstance()
+        {
+            try
+            {
+                realm = Realm.GetInstance();
+                items = realm.All<Item>().OrderBy(x => x.TitleText);
+                return await Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return await Task.FromResult(false);
+            }
+        }
+
+        public async Task<bool> BeginWrite()
+        {
+            try
+            {
+                realm.BeginWrite();
+                return await Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return await Task.FromResult(false);
+            }
+        }
+
+        public async Task<bool> DisposeInstance()
+        {
+            try
+            {
+                realm.Dispose();
+                return await Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return await Task.FromResult(false);
+            }
         }
     }
 }

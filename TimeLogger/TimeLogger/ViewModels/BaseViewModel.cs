@@ -7,6 +7,8 @@ using Xamarin.Forms;
 
 using TimeLogger.Models;
 using TimeLogger.Services;
+using System.Threading.Tasks;
+using Realms;
 
 namespace TimeLogger.ViewModels
 {
@@ -30,12 +32,22 @@ namespace TimeLogger.ViewModels
             set { SetProperty(ref title, value); }
         }
 
+        public virtual async void OnAppearing()
+        {
+            await DataStore.CreateInstance().ConfigureAwait(true);
+            await DataStore.BeginWrite();
+        }
+
+        public virtual async void OnDisappearing()
+        {
+            await DataStore.DisposeInstance();
+        }
+
         protected bool SetProperty<T>(ref T backingStore, T value,
             Action onChanged = null, [CallerMemberName]string propertyName = "")
         {
             if (EqualityComparer<T>.Default.Equals(backingStore, value))
                 return false;
-
             backingStore = value;
             onChanged?.Invoke();
             OnPropertyChanged(propertyName);
